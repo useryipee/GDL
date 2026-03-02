@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GDL</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #1e3cff; /* blue background */
+            font-family: Arial, sans-serif;
+        }
 
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .logo {
+            height: 60px;
+            width: auto;
+            margin-right: 15px;
+        }
+
+        .title {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="GDL.png" class="logo" alt="GDL Logo">
+        <div class="title">GDL</div>
+    </div>
+
+</body>
+</html>
