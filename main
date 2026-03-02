@@ -35,5 +35,25 @@
         <div class="title">GDL</div>
     </div>
 
+<div class="box">
+  <h2>Members</h2>
+  <p>
+Geoffrey, Dusty and Liam (GDL)
+  </p>
+</div>
+
+<div class="box">
+  <h2>Quotes</h2>
+  <p>
+"If life is good. Why is good life?" - Liam
+"mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm" - Geoffrey
+"Bob Roberts chop chop" - Dusty
+  </p>
+</div>
+
+<footer>
+  <p>© 2026 GDL Company (don't look that up) • Built on GitHub • Last updated: March 2026</p>
+</footer>
+
 </body>
 </html>
