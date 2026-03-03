@@ -1,0 +1,32 @@
+<h1 id="score">Score: 0</h1>
+
+<img src="GDL.png" id="logo" width="200" style="cursor:pointer;">
+
+<p id="message"></p>
+
+<script>
+let score = 0;
+
+const logo = document.getElementById("logo");
+const scoreText = document.getElementById("score");
+const message = document.getElementById("message");
+
+logo.addEventListener("click", function() {
+    score++;
+    scoreText.innerText = "Score: " + score;
+
+    if (score === 10) {
+        message.innerText = "GDL Power Rising...";
+    }
+
+    if (score === 50) {
+        message.innerText = "You're officially a GDL Grinder.";
+        logo.style.transform = "scale(1.2)";
+    }
+
+    if (score === 100) {
+        message.innerText = "MAXIMUM GDL ENERGY ⚡";
+        document.body.style.backgroundColor = "gold";
+    }
+});
+</script>
