@@ -1,44 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Clicker Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --panel: #12121a;
+      --accent: #f7c948;
+      --accent2: #ff4f7b;
+      --glow: #f7c94866;
+      --text: #f0ead6;
+      --muted: #555570;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Orbitron', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0,0,0,0.08) 3px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(247,201,72,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247,201,72,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 36px;
+    }
+
+    h1 {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(14px, 3vw, 22px);
+      color: var(--accent);
+      text-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow);
+      letter-spacing: 4px;
+      text-align: center;
+      animation: pulse-title 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse-title {
+      0%, 100% { text-shadow: 0 0 20px var(--glow), 0 0 40px var(--glow); }
+      50% { text-shadow: 0 0 30px var(--glow), 0 0 60px var(--glow), 0 0 80px var(--glow); }
+    }
+
+    .score-board {
+      background: var(--panel);
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 20px var(--glow), inset 0 0 20px rgba(247,201,72,0.03);
+      padding: 16px 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    .score-board::before,
+    .score-board::after {
+      content: '◆';
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 10px;
+    }
+    .score-board::before { left: 10px; }
+    .score-board::after { right: 10px; }
+
+    .score-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      color: var(--muted);
+      letter-spacing: 3px;
+      margin-bottom: 8px;
+    }
+
+    .score-value {
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 900;
+      color: var(--accent);
+      text-shadow: 0 0 20px var(--glow);
+      line-height: 1;
+      transition: transform 0.08s;
+    }
+
+    .score-value.bump {
+      transform: scale(1.15);
+    }
+
+    .click-zone {
+      position: relative;
+      cursor: pointer;
+      user-select: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 200px;
+    }
+
+    .click-zone:active {
+      transform: scale(0.93);
+    }
+
+    .ring {
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      opacity: 0.3;
+      animation: spin-ring 8s linear infinite;
+    }
+
+    .ring-2 {
+      inset: -28px;
+      border-color: var(--accent2);
+      animation: spin-ring 12s linear infinite reverse;
+    }
+
+    @keyframes spin-ring {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .click-zone:hover .ring { opacity: 0.7; }
+    .click-zone:hover .ring-2 { opacity: 0.5; }
+
+    .click-img {
+      width: 160px;
+      height: 160px;
+      object-fit: contain;
+      border-radius: 50%;
+      image-rendering: pixelated;
+      transition: filter 0.1s, transform 0.1s;
+      filter: drop-shadow(0 0 16px var(--glow));
+      display: none;
+    }
+
+    GDL.pngloaded {
+      display: block;
+    }
+
+    .emoji-fallback {
+      font-size: 100px;
+      line-height: 1;
+      filter: drop-shadow(0 0 16px var(--glow));
+      transition: transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .click-zone:active .click-img,
+    .click-zone:active .emoji-fallback {
+      transform: scale(0.9);
+      filter: drop-shadow(0 0 30px var(--glow)) brightness(1.3);
+    }
+
+    .float-text {
+      position: fixed;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 14px;
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--glow);
+      pointer-events: none;
+      animation: float-up 0.9s ease-out forwards;
+      z-index: 200;
+    }
+
+    @keyframes float-up {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      80%  { opacity: 0.8; }
+      100% { opacity: 0; transform: translateY(-80px) scale(0.7); }
+    }
+
+    .ripple {
+      position: fixed;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      pointer-events: none;
+      animation: ripple-out 0.5s ease-out forwards;
+      z-index: 150;
+    }
+
+    @keyframes ripple-out {
+      0%   { width: 0; height: 0; opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+      100% { width: 80px; height: 80px; opacity: 0; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .stats {
+      display: flex;
+      gap: 24px;
+      font-size: 9px;
+      font-family: 'Press Start 2P', monospace;
+      color: var(--muted);
+    }
+
+    .stat span {
+      color: var(--accent2);
+    }
+
+    .upload-hint {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 7px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-align: center;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .upload-hint:hover { color: var(--accent); }
+
+    #file-input { display: none; }
+
+    .reset-btn {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 8px;
+      background: transparent;
+      border: 1px solid var(--muted);
+      color: var(--muted);
+      padding: 8px 16px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--accent2);
+      color: var(--accent2);
+      box-shadow: 0 0 10px rgba(255,79,123,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>★ CLICK MASTER ★</h1>
+
+  <div class="score-board">
+    <div class="score-label">TOTAL CLICKS</div>
+    <div class="score-value" id="score">0</div>
+  </div>
+
+  <div class="click-zone" id="clicker">
+    <div class="ring"></div>
+    <div class="ring ring-2"></div>
+    <img class="click-img" id="click-img" src="" alt="Click me!" />
+    <div class="emoji-fallback" id="emoji">⭐</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">SESSION: <span id="session-clicks">0</span></div>
+    <div class="stat">BEST: <span id="best-clicks">0</span></div>
+  </div>
+
+  <label class="upload-hint" for="file-input">
+  </label>
+  <input type="file" id="file-input" accept="image/png,image/jpeg,image/gif,image/webp" />
+
+  <button class="reset-btn" id="reset">RESET COUNTER</button>
+</div>
+
 <script>
-let energy = 0;
-let clickPower = 1;
-let logoSize = 200;
+  let count = parseInt(localStorage.getItem('clickCount') || '0');
+  let best  = parseInt(localStorage.getItem('bestClicks') || '0');
+  let session = 0;
 
-const score = document.getElementById("score");
-const logo = document.getElementById("clickLogo");
-const status = document.getElementById("status");
+  const scoreEl   = document.getElementById('score');
+  const sessionEl = document.getElementById('session-clicks');
+  const bestEl    = document.getElementById('best-clicks');
+  const clicker   = document.getElementById('clicker');
+  const clickImg  = document.getElementById('click-img');
+  const emoji     = document.getElementById('emoji');
+  const fileInput = document.getElementById('file-input');
+  const resetBtn  = document.getElementById('reset');
 
-score.innerText = "Energy: 0";
+  // Init display
+  scoreEl.textContent = count;
+  bestEl.textContent  = best;
 
-logo.addEventListener("click", function() {
-
-    energy += clickPower;
-    score.innerText = "Energy: " + energy;
-
-    // logo slowly shrinks to make it harder
-    if (logoSize > 80) {
-        logoSize -= 0.5;
-        logo.style.width = logoSize + "px";
+  function updateDisplay() {
+    scoreEl.textContent   = count;
+    sessionEl.textContent = session;
+    if (count > best) {
+      best = count;
+      bestEl.textContent = best;
+      localStorage.setItem('bestClicks', best);
     }
+    localStorage.setItem('clickCount', count);
+  }
 
-    // small movement for difficulty
-    logo.style.transform =
-        "translate(" + (Math.random()*20 - 10) + "px," +
-        (Math.random()*20 - 10) + "px)";
+  function spawnFloat(x, y) {
+    const el = document.createElement('div');
+    el.className = 'float-text';
+    el.textContent = '+1';
+    el.style.left = (x + (Math.random() * 30 - 15)) + 'px';
+    el.style.top  = (y - 20) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 900);
+  }
 
-    // progression upgrades
-    if (energy >= 100 && clickPower === 1) {
-        clickPower = 2;
-        status.innerHTML = "<p style='color:#00ff88;'>Upgrade unlocked: Double Energy</p>";
-    }
+  function spawnRipple(x, y) {
+    const el = document.createElement('div');
+    el.className = 'ripple';
+    el.style.left = x + 'px';
+    el.style.top  = y + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 500);
+  }
 
-    if (energy >= 500 && clickPower === 2) {
-        clickPower = 5;
-        status.innerHTML = "<p style='color:#ffd700;'>Mega Generator Activated</p>";
-    }
+  function bumpScore() {
+    scoreEl.classList.remove('bump');
+    void scoreEl.offsetWidth; // reflow
+    scoreEl.classList.add('bump');
+    setTimeout(() => scoreEl.classList.remove('bump'), 120);
+  }
 
-    if (energy >= 2000 && clickPower === 5) {
-        clickPower = 10;
-        status.innerHTML = "<p style='color:#ff4d4d;'>GDL Core Reactor Online</p>";
-    }
-});
+  clicker.addEventListener('click', (e) => {
+    count++;
+    session++;
+    updateDisplay();
+    bumpScore();
+    spawnFloat(e.clientX, e.clientY);
+    spawnRipple(e.clientX, e.clientY);
+  });
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    clickImg.src = url;
+    clickImg.onload = () => {
+      clickImg.classList.add('loaded');
+      emoji.style.display = 'none';
+    };
+  });
+
+  resetBtn.addEventListener('click', () => {
+    count = 0;
+    session = 0;
+    localStorage.setItem('clickCount', 0);
+    updateDisplay();
+  });
 </script>
+
+</body>
+</html>
