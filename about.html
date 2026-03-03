@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <link rel="icon" type="image/png" href="GDL.png">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3cff, #4b6cf7);
+            color: #f1f1f1;
+            line-height: 1.6;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px 40px;
+            background-color: rgba(0,0,0,0.3);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .logo {
+            height: 60px;
+            margin-right: 20px;
+        }
+
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .box {
+            background-color: rgba(255, 255, 255, 0.1);
+            margin: 30px auto;
+            padding: 25px 30px;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.35);
+        }
+
+        .box h2 {
+            margin-bottom: 15px;
+            font-size: 28px;
+            color: #ffd700;
+        }
+
+        .box p {
+            font-size: 18px;
+            color: #e0e0e0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(0,0,0,0.3);
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .title {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <img src="GDL.png" class="logo" alt="GDL Logo">
+        <div class="title">About</div>
+    </div>
+
+    <div class="box">
+        <h2>About the company</h2>
+        <p>A company that started with real estate and is now doing everything. Yep you read this right GDL does
+        Pretty much everything. Why? I have no clue. I am just the programmer :)</p>
+    </div>
+
+    <div class="box">
+        <h2>"Important" Stuff</h2>
+        <p>
+          Official name: GDL
+          Company name: GDL Company
+          Est.: 2026
+        </p>
+    </div>
+
+    <div class="box">
+        <h2>Members</h2>
+        <p>
+          Geoffrey/Jeff (G) Dusty (D) Liam (L).
+          omg such a cool and original name.
+        </p>
+    </div>
+
+    <div class="box">
+        <h2>Roles</h2>
+        <p>Designer/Chill guy/Ideas: Geoffrey Programmer/Designer/Chill guy: Dusty Designer/Chill guy/Ideas: Liam</p>
+    </div>
+
+    <footer>
+        © 2026 GDL Company (don't look that up) • Built on GitHub • Last updated: March 2026
+    </footer>
+
+</body>
+</html>
