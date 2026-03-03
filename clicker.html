@@ -1,32 +1,44 @@
-<h1 id="score">Score: 0</h1>
-
-<img src="GDL.png" id="logo" width="200" style="cursor:pointer;">
-
-<p id="message"></p>
-
 <script>
-let score = 0;
+let energy = 0;
+let clickPower = 1;
+let logoSize = 200;
 
-const logo = document.getElementById("logo");
-const scoreText = document.getElementById("score");
-const message = document.getElementById("message");
+const score = document.getElementById("score");
+const logo = document.getElementById("clickLogo");
+const status = document.getElementById("status");
+
+score.innerText = "Energy: 0";
 
 logo.addEventListener("click", function() {
-    score++;
-    scoreText.innerText = "Score: " + score;
 
-    if (score === 10) {
-        message.innerText = "GDL Power Rising...";
+    energy += clickPower;
+    score.innerText = "Energy: " + energy;
+
+    // logo slowly shrinks to make it harder
+    if (logoSize > 80) {
+        logoSize -= 0.5;
+        logo.style.width = logoSize + "px";
     }
 
-    if (score === 50) {
-        message.innerText = "You're officially a GDL Grinder.";
-        logo.style.transform = "scale(1.2)";
+    // small movement for difficulty
+    logo.style.transform =
+        "translate(" + (Math.random()*20 - 10) + "px," +
+        (Math.random()*20 - 10) + "px)";
+
+    // progression upgrades
+    if (energy >= 100 && clickPower === 1) {
+        clickPower = 2;
+        status.innerHTML = "<p style='color:#00ff88;'>Upgrade unlocked: Double Energy</p>";
     }
 
-    if (score === 100) {
-        message.innerText = "MAXIMUM GDL ENERGY ⚡";
-        document.body.style.backgroundColor = "gold";
+    if (energy >= 500 && clickPower === 2) {
+        clickPower = 5;
+        status.innerHTML = "<p style='color:#ffd700;'>Mega Generator Activated</p>";
+    }
+
+    if (energy >= 2000 && clickPower === 5) {
+        clickPower = 10;
+        status.innerHTML = "<p style='color:#ff4d4d;'>GDL Core Reactor Online</p>";
     }
 });
 </script>
